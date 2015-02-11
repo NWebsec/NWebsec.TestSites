@@ -1,10 +1,9 @@
 ﻿// Copyright (c) André N. Klingsheim. See License.txt in the project root for license information.
 
 using System.Web.Mvc;
-using NWebsec.HttpHeaders;
 using NWebsec.Mvc.HttpHeaders;
 
-namespace Mvc4.Controllers
+namespace Mvc3.Controllers
 {
     [XXssProtection]
     public class XXssProtectionController : Controller

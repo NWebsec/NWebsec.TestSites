@@ -1,10 +1,9 @@
 ﻿// Copyright (c) André N. Klingsheim. See License.txt in the project root for license information.
 
 using System.Web.Mvc;
-using NWebsec.Csp;
 using NWebsec.Mvc.HttpHeaders.Csp;
 
-namespace Mvc4.Controllers
+namespace Mvc3.Controllers
 {
     public class CspConfigController : Controller
     {
@@ -34,7 +33,7 @@ namespace Mvc4.Controllers
             return View("Index");
         }
 
-        [CspScriptSrc(UnsafeInline = Source.Enable, UnsafeEval = Source.Enable)]
+        [CspScriptSrc(UnsafeInline = true, UnsafeEval = true)]
         public ActionResult ScriptSrcAllowInlineUnsafeEval()
         {
             return View("Index");

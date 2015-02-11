@@ -306,7 +306,7 @@ namespace NWebsec.Tests.Integration
 
             Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
             var value = response.Headers.Single(h => h.Key.Equals("Content-Security-Policy")).Value.Single();
-            Assert.AreEqual("default-src 'self'; script-src configscripthost; media-src fromconfig", value, testUri.ToString());
+            Assert.AreEqual("default-src 'self';script-src configscripthost;media-src fromconfig", value, testUri.ToString());
         }
 
         [Test]

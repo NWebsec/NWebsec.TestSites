@@ -28,18 +28,6 @@ namespace Mvc4.Areas.WithConfig.Controllers
             return View("Index");
         }
 
-        [Csp(XContentSecurityPolicyHeader = true)]
-        public ActionResult XCsp()
-        {
-            return View("Index");
-        }
-
-        [Csp(XWebKitCspHeader = true)]
-        public ActionResult XWebKitCsp()
-        {
-            return View("Index");
-        }
-
         public ActionResult Redirect()
         {
             return RedirectToAction("Index");

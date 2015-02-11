@@ -253,7 +253,7 @@ namespace NWebsec.Tests.Integration
         }
 
         //TODO Have a look at this for the next version
-        //[Test]
+        [Test]
         public async Task Csp_EnabledAndRedirect_NoHeaders()
         {
             const string path = "/Csp/Redirect";
@@ -263,32 +263,6 @@ namespace NWebsec.Tests.Integration
 
             Assert.IsTrue(response.StatusCode == HttpStatusCode.Redirect, ReqFailed + testUri);
             Assert.IsFalse(response.Headers.Contains("Content-Security-Policy"), testUri.ToString());
-        }
-
-        [Test]
-        public async Task Csp_EnabledWithXCsp_SetsHeaders()
-        {
-            const string path = "/Csp/XCsp";
-            var testUri = Helper.GetUri(BaseUri, path);
-
-            var response = await HttpClient.GetAsync(testUri);
-
-            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
-            Assert.IsTrue(response.Headers.Contains("Content-Security-Policy"), testUri.ToString());
-            Assert.IsTrue(response.Headers.Contains("X-Content-Security-Policy"), testUri.ToString());
-        }
-
-        [Test]
-        public async Task Csp_EnabledWithXWebKitCsp_SetsHeaders()
-        {
-            const string path = "/Csp/XWebKitCsp";
-            var testUri = Helper.GetUri(BaseUri, path);
-
-            var response = await HttpClient.GetAsync(testUri);
-
-            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
-            Assert.IsTrue(response.Headers.Contains("Content-Security-Policy"), testUri.ToString());
-            Assert.IsTrue(response.Headers.Contains("X-WebKit-Csp"), testUri.ToString());
         }
 
         [Test]
@@ -313,32 +287,6 @@ namespace NWebsec.Tests.Integration
 
             Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
             Assert.IsTrue(response.Headers.Contains("Content-Security-Policy-Report-Only"), testUri.ToString());
-        }
-
-        [Test]
-        public async Task CspReportOnly_EnabledWithXCsp_SetsHeaders()
-        {
-            const string path = "/CspReportOnly/XCsp";
-            var testUri = Helper.GetUri(BaseUri, path);
-
-            var response = await HttpClient.GetAsync(testUri);
-
-            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
-            Assert.IsTrue(response.Headers.Contains("Content-Security-Policy-Report-Only"), testUri.ToString());
-            Assert.IsTrue(response.Headers.Contains("X-Content-Security-Policy-Report-Only"), testUri.ToString());
-        }
-
-        [Test]
-        public async Task CspReportOnly_EnabledWithXWebKitCsp_SetsHeaders()
-        {
-            const string path = "/CspReportOnly/XWebKitCsp";
-            var testUri = Helper.GetUri(BaseUri, path);
-
-            var response = await HttpClient.GetAsync(testUri);
-
-            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
-            Assert.IsTrue(response.Headers.Contains("Content-Security-Policy-Report-Only"), testUri.ToString());
-            Assert.IsTrue(response.Headers.Contains("X-WebKit-Csp-Report-Only"), testUri.ToString());
         }
 
         [Test]
@@ -594,7 +542,7 @@ namespace NWebsec.Tests.Integration
 
             Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
             var cspHeader = response.Headers.GetValues("Content-Security-Policy").Single();
-            Assert.AreEqual("default-src 'self'; report-uri /reporturi", cspHeader, testUri.ToString());
+            Assert.AreEqual("default-src 'self';report-uri /reporturi", cspHeader, testUri.ToString());
         }
 
         [Test]

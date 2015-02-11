@@ -1,7 +1,6 @@
 ﻿// Copyright (c) André N. Klingsheim. See License.txt in the project root for license information.
 
 using System.Web.Mvc;
-using NWebsec.Csp;
 using NWebsec.Mvc.HttpHeaders.Csp;
 
 namespace Mvc4.Areas.WithConfig.Controllers
@@ -11,68 +10,68 @@ namespace Mvc4.Areas.WithConfig.Controllers
     {
         //
         // GET: /CspDirectives/
-        [CspDefaultSrc(Self = Source.Enable)]
+        [CspDefaultSrc(Self = true)]
         public ActionResult DefaultSrc()
         {
             return View("Index");
         }
 
-        [CspScriptSrc(Self = Source.Enable)]
+        [CspScriptSrc(Self = true)]
         public ActionResult ScriptSrc()
         {
             return View("Index");
         }
 
-        [CspStyleSrc(Self = Source.Enable)]
+        [CspStyleSrc(Self = true)]
         public ActionResult StyleSrc()
         {
             return View("Index");
         }
 
-        [CspImgSrc(Self = Source.Enable)]
+        [CspImgSrc(Self = true)]
         public ActionResult ImgSrc()
         {
             return View("Index");
         }
 
-        [CspConnectSrc (Self = Source.Enable)]
+        [CspConnectSrc (Self = true)]
         public ActionResult ConnectSrc()
         {
             return View("Index");
         }
 
-        [CspFontSrc(Self = Source.Enable)]
+        [CspFontSrc(Self = true)]
         public ActionResult FontSrc()
         {
             return View("Index");
         }
 
-        [CspFrameSrc(Self = Source.Enable)]
+        [CspFrameSrc(Self = true)]
         public ActionResult FrameSrc()
         {
             return View("Index");
         }
 
-        [CspMediaSrc(Self = Source.Enable)]
+        [CspMediaSrc(Self = true)]
         public ActionResult MediaSrc()
         {
             return View("Index");
         }
 
-        [CspObjectSrc(Self = Source.Enable)]
+        [CspObjectSrc(Self = true)]
         public ActionResult ObjectSrc()
         {
             return View("Index");
         }
 
-        [CspDefaultSrc(Self = Source.Enable)]
+        [CspDefaultSrc(Self = true)]
         [CspReportUri(EnableBuiltinHandler = true)]
         public ActionResult ReportUriBuiltin()
         {
             return View("Index");
         }
 
-        [CspDefaultSrc(Self = Source.Enable)]
+        [CspDefaultSrc(Self = true)]
         [CspReportUri(ReportUris = "/reporturi")]
         public ActionResult ReportUriCustom()
         {
