@@ -4,17 +4,12 @@ using System.Web.Mvc;
 
 namespace Mvc5owin.Controllers
 {
-    public class HstsController : Controller
+    public class CspFullConfigController : Controller
     {
         //
-        // GET: /Hsts/
+        // GET: /CspConfig/
 
         public ActionResult Index()
-        {
-            return View("Index");
-        }
-
-        public ActionResult NoHttpsOnly()
         {
             return View("Index");
         }

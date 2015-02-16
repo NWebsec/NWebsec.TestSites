@@ -19,9 +19,9 @@ namespace Mvc5owin
             app.Map("/RedirectHttps/CustomHttpsAllowed", b => b.UseRedirectValidation(options => options.AllowSameHostRedirectsToHttps(4443)));
 
             app.Map("/Hsts/Index", b => b.UseHsts(options => options.MaxAge(days: 30).IncludeSubdomains()));
-            app.Map("/Hsts/HttpsOnly", b => b.UseHsts(options => options.MaxAge(days: 30).IncludeSubdomains().HttpsOnly()));
-            
-            app.UseRedirectValidation(options => options.AllowedDestinations("https://www.nwebsec.com","https://nwebsec.codeplex.com/path"));
+            app.Map("/Hsts/NoHttpsOnly", b => b.UseHsts(options => options.MaxAge(days: 30).IncludeSubdomains().AllResponses()));
+
+            app.UseRedirectValidation(options => options.AllowedDestinations("https://www.nwebsec.com", "https://nwebsec.codeplex.com/path"));
             app.UseXContentTypeOptions();
             app.UseXDownloadOptions();
             app.UseXfo(options => options.SameOrigin());
@@ -34,7 +34,26 @@ namespace Mvc5owin
                 .ScriptSources(s => s.CustomSources("configscripthost"))
                 .MediaSources(s => s.CustomSources("fromconfig"))
                 );
-            
+
+            app.Map("/CspFullConfig",
+                b => b.UseCsp(options => options
+                    .BaseUris(s => s.CustomSources("https://w-w.üüüüüü.de/baseuri?p=a;b,"))
+                    .ChildSources(s => s.CustomSources("childsrcconfig"))
+                    .ConnectSources(s => s.CustomSources("connectsrcconfig"))
+                    .DefaultSources(s => s.CustomSources("defaultsrcconfig"))
+                    .FontSources(s => s.CustomSources("fontsrcconfig"))
+                    .FormActions(s => s.CustomSources("formactionconfig"))
+                    .FrameAncestors(s => s.CustomSources("frameancestorsconfig"))
+                    .FrameSources(s => s.CustomSources("framesrcconfig"))
+                    .ImageSources(s => s.CustomSources("imgsrcconfig"))
+                    .MediaSources(s => s.CustomSources("mediasrcconfig"))
+                    .ObjectSources(s => s.CustomSources("objectsrcconfig"))
+                    .Sandbox(s => s.AllowForms().AllowPointerLock().AllowPopups().AllowSameOrigin().AllowScripts().AllowTopNavigation())
+                    .ScriptSources(s => s.CustomSources("scriptsrcconfig"))
+                    .StyleSources(s => s.CustomSources("stylesrcconfig"))
+                    .ReportUris(s => s.Uris("/reporturi", "https://w-w.üüüüüü.de/réport?p=a;b,"))
+                    )
+                );
         }
     }
 }

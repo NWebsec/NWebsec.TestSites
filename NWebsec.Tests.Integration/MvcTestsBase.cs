@@ -253,7 +253,7 @@ namespace NWebsec.Tests.Integration
         }
 
         //TODO Have a look at this for the next version
-        [Test]
+        //[Test]
         public async Task Csp_EnabledAndRedirect_NoHeaders()
         {
             const string path = "/Csp/Redirect";
@@ -299,6 +299,20 @@ namespace NWebsec.Tests.Integration
 
             Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
             Assert.IsFalse(response.Headers.Contains("Content-Security-Policy-Report-Only"), testUri.ToString());
+        }
+
+        [Test]
+        public async Task CspFullConfig_EnabledInConfig_SetsHeaders()
+        {
+            const string path = "/CspFullConfig";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            var cspHeader = response.Headers.GetValues("Content-Security-Policy").Single();
+            const string expectedHeader = "default-src defaultsrcconfig;script-src scriptsrcconfig;object-src objectsrcconfig;style-src stylesrcconfig;img-src imgsrcconfig;media-src mediasrcconfig;frame-src framesrcconfig;font-src fontsrcconfig;connect-src connectsrcconfig;base-uri https://w-w.xn--tdaaaaaa.de/baseuri?p=a%3Bb%2C;child-src childsrcconfig;form-action formactionconfig;frame-ancestors frameancestorsconfig;sandbox allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-top-navigation;report-uri /reporturi https://w-w.xn--tdaaaaaa.de/r%C3%A9port?p=a%3Bb%2C";
+            Assert.AreEqual(expectedHeader, cspHeader, testUri.ToString());
         }
 
         [Test]
@@ -377,6 +391,19 @@ namespace NWebsec.Tests.Integration
             Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
             var cspHeader = response.Headers.GetValues("Content-Security-Policy").Single();
             Assert.AreEqual("default-src 'self'", cspHeader, testUri.ToString());
+        }
+
+        [Test]
+        public async Task CspDirectives_DefaultSrcWithCustomIdnSourceEnabled_SetsHeader()
+        {
+            const string path = "/CspDirectives/DefaultSrcCustom";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            var cspHeader = response.Headers.GetValues("Content-Security-Policy").Single();
+            Assert.AreEqual("default-src 'self' https://xn--tdaaaaaa.de", cspHeader, testUri.ToString());
         }
 
         [Test]
@@ -497,6 +524,58 @@ namespace NWebsec.Tests.Integration
         }
 
         [Test]
+        public async Task CspDirectives_BaseUriEnabled_SetsHeader()
+        {
+            const string path = "/CspDirectives/BaseUri";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            var cspHeader = response.Headers.GetValues("Content-Security-Policy").Single();
+            Assert.AreEqual("base-uri 'self'", cspHeader, testUri.ToString());
+        }
+
+        [Test]
+        public async Task CspDirectives_ChildSrcEnabled_SetsHeader()
+        {
+            const string path = "/CspDirectives/ChildSrc";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            var cspHeader = response.Headers.GetValues("Content-Security-Policy").Single();
+            Assert.AreEqual("child-src 'self'", cspHeader, testUri.ToString());
+        }
+
+        [Test]
+        public async Task CspDirectives_FormActionEnabled_SetsHeader()
+        {
+            const string path = "/CspDirectives/FormAction";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            var cspHeader = response.Headers.GetValues("Content-Security-Policy").Single();
+            Assert.AreEqual("form-action 'self'", cspHeader, testUri.ToString());
+        }
+
+        [Test]
+        public async Task CspDirectives_SandboxEnabled_SetsHeader()
+        {
+            const string path = "/CspDirectives/Sandbox";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            var cspHeader = response.Headers.GetValues("Content-Security-Policy").Single();
+            Assert.AreEqual("sandbox allow-scripts", cspHeader, testUri.ToString());
+        }
+
+        [Test]
         public async Task CspDirectives_NoncesEnabled_SetsHeader()
         {
             const string path = "/CspDirectives/Nonces";
@@ -515,7 +594,7 @@ namespace NWebsec.Tests.Integration
             var bodyStyleNonce = styleCaptures[1].Value;
 
             var cspHeader = response.Headers.GetValues("Content-Security-Policy").Single();
-            var expectedDirective = String.Format("script-src 'nonce-{0}'; style-src 'nonce-{1}'", bodyScriptNonce, bodyStyleNonce);
+            var expectedDirective = String.Format("script-src 'nonce-{0}';style-src 'nonce-{1}'", bodyScriptNonce, bodyStyleNonce);
             Assert.AreEqual(expectedDirective, cspHeader, testUri.ToString());
         }
 
@@ -543,6 +622,32 @@ namespace NWebsec.Tests.Integration
             Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
             var cspHeader = response.Headers.GetValues("Content-Security-Policy").Single();
             Assert.AreEqual("default-src 'self';report-uri /reporturi", cspHeader, testUri.ToString());
+        }
+
+        [Test]
+        public async Task CspDirectives_CustomReportUriAbsolute_SetsHeader()
+        {
+            const string path = "/CspDirectives/ReportUriCustomAbsolute";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            var cspHeader = response.Headers.GetValues("Content-Security-Policy").Single();
+            Assert.AreEqual("default-src 'self';report-uri https://cspreport.nwebsec.com/report", cspHeader, testUri.ToString());
+        }
+
+        [Test]
+        public async Task CspDirectives_CustomReportUriIdnAbsolute_SetsHeader()
+        {
+            const string path = "/CspDirectives/ReportUriCustomAbsoluteIdn";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            var cspHeader = response.Headers.GetValues("Content-Security-Policy").Single();
+            Assert.AreEqual("default-src 'self';report-uri https://w-w.xn--tdaaaaaa.de/r%C3%A9port?p=a%3Bb%2C", cspHeader, testUri.ToString());
         }
 
         [Test]
@@ -720,10 +825,11 @@ namespace NWebsec.Tests.Integration
 
             Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + sessionTestUri);
             var sessionCookie = _handler.CookieContainer.GetCookies(new Uri(BaseUri))["ASP.NET_SessionId"];
+            Assert.IsNotNull(sessionCookie);
             Assert.AreEqual(24, sessionCookie.Value.Length,
                             "Cookie was not length 24, hence not a classic ASP.NET session id.");
 
-            var path = "/SessionFixation/BecomeUserOne";
+            const string path = "/SessionFixation/BecomeUserOne";
             var testUri = Helper.GetUri(BaseUri, path);
 
             //Become user1
@@ -738,6 +844,7 @@ namespace NWebsec.Tests.Integration
             Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + sessionTestUri);
 
             var sessionCookieUser1 = _handler.CookieContainer.GetCookies(new Uri(BaseUri))["ASP.NET_SessionId"];
+            Assert.IsNotNull(sessionCookieUser1);
             Assert.Less(24, sessionCookieUser1.Value.Length,
                             "Cookie length was not longer than 24, hence not an authenticated session id.");
         }
@@ -763,6 +870,8 @@ namespace NWebsec.Tests.Integration
             Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + sessionTestUri);
 
             var sessionCookieUser1 = _handler.CookieContainer.GetCookies(new Uri(BaseUri))["ASP.NET_SessionId"];
+            
+            Assert.IsNotNull(sessionCookieUser1);
             Assert.Less(24, sessionCookieUser1.Value.Length,
                             "Cookie length was not longer than 24, hence not an authenticated session id.");
 
@@ -782,6 +891,7 @@ namespace NWebsec.Tests.Integration
             Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + sessionTestUri);
 
             var sessionCookieUser2 = _handler.CookieContainer.GetCookies(new Uri(BaseUri))["ASP.NET_SessionId"];
+            Assert.IsNotNull(sessionCookieUser2);            
             Assert.Less(24, sessionCookieUser2.Value.Length,
                             "Cookie length was not longer than 24, hence not an authenticated session id.");
             Assert.AreNotEqual(sessionCookieUser1.Value, sessionCookieUser2.Value, "Did not get a new authenticated session id for user2.");
@@ -808,6 +918,7 @@ namespace NWebsec.Tests.Integration
             Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + sessionTestUri);
 
             var sessionCookieUser2 = _handler.CookieContainer.GetCookies(new Uri(BaseUri))["ASP.NET_SessionId"];
+            Assert.IsNotNull(sessionCookieUser2);
             Assert.Less(24, sessionCookieUser2.Value.Length,
                             "Cookie length was not longer than 24, hence not an authenticated session id.");
 
@@ -820,6 +931,7 @@ namespace NWebsec.Tests.Integration
             Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + sessionTestUri);
 
             var finalSessionCookie = _handler.CookieContainer.GetCookies(new Uri(BaseUri))["ASP.NET_SessionId"];
+            Assert.IsNotNull(finalSessionCookie);
             Assert.AreEqual(24, finalSessionCookie.Value.Length,
                             "Cookie was not length 24, hence not a classic ASP.NET session id.");
         }

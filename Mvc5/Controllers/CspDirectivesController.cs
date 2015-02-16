@@ -16,6 +16,12 @@ namespace Mvc5.Controllers
             return View("Index");
         }
 
+        [CspDefaultSrc(Self = true, CustomSources = "https://üüüüüü.de")]
+        public ActionResult DefaultSrcCustom()
+        {
+            return View("Index");
+        }
+
         [CspScriptSrc(Self = true)]
         public ActionResult ScriptSrc()
         {
@@ -70,6 +76,29 @@ namespace Mvc5.Controllers
             return View("Index");
         }
 
+        [CspBaseUri(Self = true)]
+        public ActionResult BaseUri()
+        {
+            return View("Index");
+        }
+
+        [CspChildSrc(Self = true)]
+        public ActionResult ChildSrc()
+        {
+            return View("Index");
+        }
+        [CspFormAction(Self = true)]
+        public ActionResult FormAction()
+        {
+            return View("Index");
+        }
+
+        [CspSandbox(AllowScripts = true)]
+        public ActionResult Sandbox()
+        {
+            return View("Index");
+        }
+
         [CspDefaultSrc(Self = true)]
         [CspReportUri(EnableBuiltinHandler = true)]
         public ActionResult ReportUriBuiltin()
@@ -80,6 +109,20 @@ namespace Mvc5.Controllers
         [CspDefaultSrc(Self = true)]
         [CspReportUri(ReportUris = "/reporturi")]
         public ActionResult ReportUriCustom()
+        {
+            return View("Index");
+        }
+
+        [CspDefaultSrc(Self = true)]
+        [CspReportUri(ReportUris = "https://cspreport.nwebsec.com/report")]
+        public ActionResult ReportUriCustomAbsolute()
+        {
+            return View("Index");
+        }
+
+        [CspDefaultSrc(Self = true)]
+        [CspReportUri(ReportUris = "https://w-w.üüüüüü.de/réport?p=a;b,")]
+        public ActionResult ReportUriCustomAbsoluteIdn()
         {
             return View("Index");
         }

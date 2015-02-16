@@ -131,7 +131,7 @@ namespace NWebsec.Tests.Integration
         }
 
         [Test]
-        public async Task Hsts_EnabledOverHttp_SetsHeaders()
+        public async Task Hsts_EnabledOverHttp_NoHeader()
         {
             const string path = "/Hsts/Index";
             var testUri = Helper.GetUri(BaseUri, path);
@@ -139,11 +139,11 @@ namespace NWebsec.Tests.Integration
             var response = await HttpClient.GetAsync(testUri);
 
             Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
-            Assert.IsTrue(response.Headers.Contains("Strict-Transport-Security"), testUri.ToString());
+            Assert.IsFalse(response.Headers.Contains("Strict-Transport-Security"), testUri.ToString());
         }
 
         [Test]
-        public async Task Hsts_EnabledOverHttps_SetsHeaders()
+        public async Task Hsts_EnabledOverHttps_SetsHeader()
         {
             const string path = "/Hsts/Index";
             var testUri = Helper.GetHttpsUri(BaseUri, path);
@@ -155,21 +155,21 @@ namespace NWebsec.Tests.Integration
         }
 
         [Test]
-        public async Task Hsts_EnabledHttpsOnlyOverHttp_NoHeaders()
+        public async Task Hsts_EnabledNoHttpsOnly_SetsHeader()
         {
-            const string path = "/Hsts/HttpsOnly";
+            const string path = "/Hsts/NoHttpsOnly";
             var testUri = Helper.GetUri(BaseUri, path);
 
             var response = await HttpClient.GetAsync(testUri);
 
             Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
-            Assert.IsFalse(response.Headers.Contains("Strict-Transport-Security"), testUri.ToString());
+            Assert.IsTrue(response.Headers.Contains("Strict-Transport-Security"), testUri.ToString());
         }
 
         [Test]
-        public async Task Hsts_EnabledHttpsOnlyOverHttps_SetsHeaders()
+        public async Task Hsts_EnabledNoHttpsOnlyOverHttps_SetsHeader()
         {
-            const string path = "/Hsts/HttpsOnly";
+            const string path = "/Hsts/NoHttpsOnly";
             var testUri = Helper.GetHttpsUri(BaseUri, path);
 
             var response = await HttpClient.GetAsync(testUri);
@@ -310,19 +310,6 @@ namespace NWebsec.Tests.Integration
         }
 
         [Test]
-        public async Task CspConfig_EnabledInConfig_SetsHeaders()
-        {
-            const string path = "/CspConfig";
-            var testUri = Helper.GetUri(BaseUri, path);
-
-            var response = await HttpClient.GetAsync(testUri);
-
-            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
-            var cspHeader = response.Headers.GetValues("Content-Security-Policy").Single();
-            Assert.IsTrue(cspHeader.Contains("media-src fromconfig"), testUri.ToString());
-        }
-
-        [Test]
         public async Task CspConfig_SourcesInConfigAndInAttributeWithInheritSources_CombinesSources()
         {
             const string path = "/CspConfig/AddSource";
@@ -372,6 +359,20 @@ namespace NWebsec.Tests.Integration
             Assert.IsTrue(response.Headers.Contains("Content-Security-Policy"), testUri.ToString());
             var cspHeader = response.Headers.GetValues("Content-Security-Policy").Single();
             Assert.IsTrue(cspHeader.Contains("script-src 'unsafe-inline' 'unsafe-eval' configscripthost;"), testUri.ToString());
+        }
+
+        [Test]
+        public async Task CspFullConfig_EnabledInConfig_SetsHeaders()
+        {
+            const string path = "/CspFullConfig";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            var cspHeader = response.Headers.GetValues("Content-Security-Policy").Single();
+            const string expectedHeader = "default-src defaultsrcconfig;script-src scriptsrcconfig;object-src objectsrcconfig;style-src stylesrcconfig;img-src imgsrcconfig;media-src mediasrcconfig;frame-src framesrcconfig;font-src fontsrcconfig;connect-src connectsrcconfig;base-uri https://w-w.xn--tdaaaaaa.de/baseuri?p=a%3Bb%2C;child-src childsrcconfig;form-action formactionconfig;frame-ancestors frameancestorsconfig;sandbox allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-top-navigation;report-uri /reporturi https://w-w.xn--tdaaaaaa.de/r%C3%A9port?p=a%3Bb%2C";
+            Assert.AreEqual(expectedHeader, cspHeader, testUri.ToString());
         }
     }
 }
