@@ -94,8 +94,31 @@ namespace Mvc3.Controllers
             return View("Index");
         }
 
-        [CspSandbox(AllowScripts = true)]
+        [CspPluginTypes(MediaTypes = "application/cspattribute")]
+        public ActionResult PluginTypes()
+        {
+            return View("Index");
+        }
+
+        [CspPluginTypes(MediaTypes = "application/cspattribute")]
+        public ActionResult PluginTypesHtmlHelperAndAttribute()
+        {
+            return View("PluginTypesHtmlHelper");
+        }
+
+        public ActionResult PluginTypesHtmlHelper()
+        {
+            return View();
+        }
+
+        [CspSandbox]
         public ActionResult Sandbox()
+        {
+            return View("Index");
+        }
+
+        [CspSandbox(AllowScripts = true)]
+        public ActionResult SandboxAllowScripts()
         {
             return View("Index");
         }

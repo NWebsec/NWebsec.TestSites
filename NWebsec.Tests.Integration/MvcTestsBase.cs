@@ -563,9 +563,69 @@ namespace NWebsec.Tests.Integration
         }
 
         [Test]
-        public async Task CspDirectives_SandboxEnabled_SetsHeader()
+        public async Task CspDirectives_PluginTypes_SetsHeader()
+        {
+            const string path = "/CspDirectives/PluginTypes";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            var cspHeader = response.Headers.GetValues("Content-Security-Policy").Single();
+            Assert.AreEqual("plugin-types application/cspattribute", cspHeader, testUri.ToString());
+        }
+
+        [Test]
+        public async Task CspDirectives_PluginTypesHtmlHelperAndAttribute_SetsHeader()
+        {
+            const string path = "/CspDirectives/PluginTypesHtmlHelperAndAttribute";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            var body = await response.Content.ReadAsStringAsync();
+
+            var pluginTypeCaptures = Regex.Match(body, @"<embed type=""(.+)"" />").Groups;
+            Assert.AreEqual(2, pluginTypeCaptures.Count, "Expected 2 plugin type capture, captured " + pluginTypeCaptures.Count);
+            var pluginType = pluginTypeCaptures[1].Value;
+
+            Assert.AreEqual("application/htmlhelper", pluginType);
+            
+            var expectedDirective = String.Format("plugin-types application/cspattribute {0}", pluginType);
+            var cspHeader = response.Headers.GetValues("Content-Security-Policy").Single();
+            Assert.AreEqual("plugin-types application/cspattribute application/htmlhelper", cspHeader, testUri.ToString());
+        }
+
+        [Test]
+        public async Task CspDirectives_PluginTypesHtmlHelper_SetsHeader()
+        {
+            const string path = "/CspDirectives/PluginTypesHtmlHelper";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            var cspHeader = response.Headers.GetValues("Content-Security-Policy").Single();
+            Assert.AreEqual("plugin-types application/htmlhelper", cspHeader, testUri.ToString());
+        }
+
+        [Test]
+        public async Task CspDirectives_Sandbox_SetsHeader()
         {
             const string path = "/CspDirectives/Sandbox";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            var cspHeader = response.Headers.GetValues("Content-Security-Policy").Single();
+            Assert.AreEqual("sandbox", cspHeader, testUri.ToString());
+        }
+
+        [Test]
+        public async Task CspDirectives_SandboxAllowScripts_SetsHeader()
+        {
+            const string path = "/CspDirectives/SandboxAllowScripts";
             var testUri = Helper.GetUri(BaseUri, path);
 
             var response = await HttpClient.GetAsync(testUri);
@@ -870,7 +930,7 @@ namespace NWebsec.Tests.Integration
             Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + sessionTestUri);
 
             var sessionCookieUser1 = _handler.CookieContainer.GetCookies(new Uri(BaseUri))["ASP.NET_SessionId"];
-            
+
             Assert.IsNotNull(sessionCookieUser1);
             Assert.Less(24, sessionCookieUser1.Value.Length,
                             "Cookie length was not longer than 24, hence not an authenticated session id.");
@@ -891,7 +951,7 @@ namespace NWebsec.Tests.Integration
             Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + sessionTestUri);
 
             var sessionCookieUser2 = _handler.CookieContainer.GetCookies(new Uri(BaseUri))["ASP.NET_SessionId"];
-            Assert.IsNotNull(sessionCookieUser2);            
+            Assert.IsNotNull(sessionCookieUser2);
             Assert.Less(24, sessionCookieUser2.Value.Length,
                             "Cookie length was not longer than 24, hence not an authenticated session id.");
             Assert.AreNotEqual(sessionCookieUser1.Value, sessionCookieUser2.Value, "Did not get a new authenticated session id for user2.");

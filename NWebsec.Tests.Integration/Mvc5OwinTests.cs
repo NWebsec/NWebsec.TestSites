@@ -371,7 +371,7 @@ namespace NWebsec.Tests.Integration
 
             Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
             var cspHeader = response.Headers.GetValues("Content-Security-Policy").Single();
-            const string expectedHeader = "default-src defaultsrcconfig;script-src scriptsrcconfig;object-src objectsrcconfig;style-src stylesrcconfig;img-src imgsrcconfig;media-src mediasrcconfig;frame-src framesrcconfig;font-src fontsrcconfig;connect-src connectsrcconfig;base-uri https://w-w.xn--tdaaaaaa.de/baseuri?p=a%3Bb%2C;child-src childsrcconfig;form-action formactionconfig;frame-ancestors frameancestorsconfig;sandbox allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-top-navigation;report-uri /reporturi https://w-w.xn--tdaaaaaa.de/r%C3%A9port?p=a%3Bb%2C";
+            const string expectedHeader = "default-src defaultsrcconfig;script-src scriptsrcconfig;object-src objectsrcconfig;style-src stylesrcconfig;img-src imgsrcconfig;media-src mediasrcconfig;frame-src framesrcconfig;font-src fontsrcconfig;connect-src connectsrcconfig;base-uri https://w-w.xn--tdaaaaaa.de/baseuri?p=a%3Bb%2C;child-src childsrcconfig;form-action formactionconfig;frame-ancestors frameancestorsconfig;plugin-types application/pdf;sandbox allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-top-navigation;report-uri /reporturi https://w-w.xn--tdaaaaaa.de/r%C3%A9port?p=a%3Bb%2C";
             Assert.AreEqual(expectedHeader, cspHeader, testUri.ToString());
         }
     }

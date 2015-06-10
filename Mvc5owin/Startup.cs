@@ -48,6 +48,7 @@ namespace Mvc5owin
                     .ImageSources(s => s.CustomSources("imgsrcconfig"))
                     .MediaSources(s => s.CustomSources("mediasrcconfig"))
                     .ObjectSources(s => s.CustomSources("objectsrcconfig"))
+                    .PluginTypes(s => s.MediaTypes("application/pdf"))
                     .Sandbox(s => s.AllowForms().AllowPointerLock().AllowPopups().AllowSameOrigin().AllowScripts().AllowTopNavigation())
                     .ScriptSources(s => s.CustomSources("scriptsrcconfig"))
                     .StyleSources(s => s.CustomSources("stylesrcconfig"))
