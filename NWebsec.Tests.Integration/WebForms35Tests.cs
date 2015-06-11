@@ -55,7 +55,7 @@ namespace NWebsec.Tests.Integration
             var response = await HttpClient.GetAsync(testUri);
 
             Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
-            Assert.IsNotNull(response.Headers.SingleOrDefault(c => c.Key.Equals("Strict-Transport-Security", StringComparison.OrdinalIgnoreCase)));
+            Assert.IsTrue(response.Headers.Any(c => c.Key.Equals("Strict-Transport-Security", StringComparison.OrdinalIgnoreCase)), "Expected header to not be set.");
         }
 
         [Test]
@@ -67,7 +67,7 @@ namespace NWebsec.Tests.Integration
             var response = await HttpClient.GetAsync(testUri);
 
             Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
-            Assert.IsNotNull(response.Headers.SingleOrDefault(c => c.Key.Equals("Strict-Transport-Security", StringComparison.OrdinalIgnoreCase)));
+            Assert.IsTrue(response.Headers.Any(c => c.Key.Equals("Strict-Transport-Security", StringComparison.OrdinalIgnoreCase)));
         }
 
         [Test]
@@ -91,7 +91,67 @@ namespace NWebsec.Tests.Integration
             var response = await HttpClient.GetAsync(testUri);
 
             Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
-            Assert.IsNotNull(response.Headers.SingleOrDefault(c => c.Key.Equals("Strict-Transport-Security", StringComparison.OrdinalIgnoreCase)));
+            Assert.IsTrue(response.Headers.Any(c => c.Key.Equals("Strict-Transport-Security", StringComparison.OrdinalIgnoreCase)));
+        }
+
+        [Test]
+        public async Task Hpkp_NotConfigured_NoHeader()
+        {
+            const string path = "/Default.aspx";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            Assert.IsFalse(response.Headers.Any(c => c.Key.Equals("Public-Key-Pins", StringComparison.OrdinalIgnoreCase)));
+        }
+
+        [Test]
+        public async Task Hpkp_HttpNoHttpsOnly_AddsHeader()
+        {
+            const string path = "/Hpkp/Default.aspx";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            Assert.IsTrue(response.Headers.Any(c => c.Key.Equals("Public-Key-Pins", StringComparison.OrdinalIgnoreCase)), "Expected header to not be set.");
+        }
+
+        [Test]
+        public async Task Hpkp_HttpsNoHttpsOnly_AddsHeader()
+        {
+            const string path = "/Hpkp/Default.aspx";
+            var testUri = Helper.GetHttpsUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            Assert.IsTrue(response.Headers.Any(c => c.Key.Equals("Public-Key-Pins", StringComparison.OrdinalIgnoreCase)));
+        }
+
+        [Test]
+        public async Task Hpkp_HttpAndHttpsOnly_NoHeader()
+        {
+            const string path = "/Hpkp/HttpsOnly/Default.aspx";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            Assert.IsFalse(response.Headers.Any(c => c.Key.Equals("Public-Key-Pins", StringComparison.OrdinalIgnoreCase)));
+        }
+
+        [Test]
+        public async Task Hpkp_HttpsAndHttpsOnly_AddsHeader()
+        {
+            const string path = "/Hpkp/HttpsOnly/Default.aspx";
+            var testUri = Helper.GetHttpsUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            Assert.IsTrue(response.Headers.Any(c => c.Key.Equals("Public-Key-Pins", StringComparison.OrdinalIgnoreCase)));
         }
 
         [Test]

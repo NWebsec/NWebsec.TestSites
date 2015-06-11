@@ -125,6 +125,7 @@
     <Compile Include="Controllers\CspConfigController.cs" />
     <Compile Include="Controllers\CspFullConfigController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\HpkpController.cs" />
     <Compile Include="Controllers\HstsController.cs" />
     <Compile Include="Controllers\RedirectHttpsController.cs" />
     <Compile Include="Controllers\RedirectController.cs" />

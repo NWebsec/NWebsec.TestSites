@@ -21,6 +21,22 @@ namespace Mvc5owin
             app.Map("/Hsts/Index", b => b.UseHsts(options => options.MaxAge(days: 30).IncludeSubdomains()));
             app.Map("/Hsts/NoHttpsOnly", b => b.UseHsts(options => options.MaxAge(days: 30).IncludeSubdomains().AllResponses()));
 
+            app.Map("/Hpkp/Index", b => b.UseHpkp(options =>
+            {
+                options.MaxAge(days: 30)
+                    .IncludeSubdomains()
+                    .Sha256Pins("d6qzRu9zOECb90Uez27xWltNsj0e1Md7GkYYkVoZWmM=",
+                        "E9CZ9INDbd+2eRQozYqqbQ2yXLVKB9+xcprMF+44U1g=");
+            }));
+            app.Map("/Hpkp/NoHttpsOnly", b => b.UseHpkp(options =>
+            {
+                options.MaxAge(days: 30)
+                    .IncludeSubdomains()
+                    .AllResponses()
+                    .Sha256Pins("d6qzRu9zOECb90Uez27xWltNsj0e1Md7GkYYkVoZWmM=",
+                        "E9CZ9INDbd+2eRQozYqqbQ2yXLVKB9+xcprMF+44U1g=");
+            }));
+
             app.UseRedirectValidation(options => options.AllowedDestinations("https://www.nwebsec.com", "https://nwebsec.codeplex.com/path"));
             app.UseXContentTypeOptions();
             app.UseXDownloadOptions();

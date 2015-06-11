@@ -178,6 +178,55 @@ namespace NWebsec.Tests.Integration
             Assert.IsTrue(response.Headers.Contains("Strict-Transport-Security"), testUri.ToString());
         }
 
+        //TODO
+        [Test]
+        public async Task Hpkp_EnabledOverHttp_NoHeader()
+        {
+            const string path = "/Hpkp/Index";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            Assert.IsFalse(response.Headers.Contains("Public-Key-Pins"), testUri.ToString());
+        }
+
+        [Test]
+        public async Task Hpkp_EnabledOverHttps_SetsHeader()
+        {
+            const string path = "/Hpkp/Index";
+            var testUri = Helper.GetHttpsUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            Assert.IsTrue(response.Headers.Contains("Public-Key-Pins"), testUri.ToString());
+        }
+
+        [Test]
+        public async Task Hpkp_EnabledNoHttpsOnly_SetsHeader()
+        {
+            const string path = "/Hpkp/NoHttpsOnly";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            Assert.IsTrue(response.Headers.Contains("Public-Key-Pins"), testUri.ToString());
+        }
+
+        [Test]
+        public async Task Hpkp_EnabledNoHttpsOnlyOverHttps_SetsHeader()
+        {
+            const string path = "/Hpkp/NoHttpsOnly";
+            var testUri = Helper.GetHttpsUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            Assert.IsTrue(response.Headers.Contains("Public-Key-Pins"), testUri.ToString());
+        }
+
         [Test]
         public async Task XContentTypeOptions_Enabled_SetsHeaders()
         {
