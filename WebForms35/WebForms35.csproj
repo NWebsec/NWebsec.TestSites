@@ -47,11 +47,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NWebsec, Version=4.1.0.0, Culture=neutral, PublicKeyToken=3613da5f958908a1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NWebsec.4.1.0-beta01\lib\35\NWebsec.dll</HintPath>
+      <HintPath>..\packages\NWebsec.4.1.0\lib\35\NWebsec.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NWebsec.Core, Version=1.4.0.0, Culture=neutral, PublicKeyToken=3613da5f958908a1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NWebsec.Core.1.4.0-beta01\lib\35\NWebsec.Core.dll</HintPath>
+      <HintPath>..\packages\NWebsec.Core.1.4.0\lib\35\NWebsec.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NWebsec.SessionSecurity, Version=1.1.0.0, Culture=neutral, PublicKeyToken=3613da5f958908a1, processorArchitecture=MSIL">
