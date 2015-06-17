@@ -42,16 +42,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="NWebsec, Version=4.1.0.0, Culture=neutral, PublicKeyToken=3613da5f958908a1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NWebsec.4.1.0\lib\45\NWebsec.dll</HintPath>
+    <Reference Include="NWebsec, Version=4.1.1.0, Culture=neutral, PublicKeyToken=3613da5f958908a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NWebsec.4.1.1\lib\45\NWebsec.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NWebsec.Core, Version=1.4.0.0, Culture=neutral, PublicKeyToken=3613da5f958908a1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NWebsec.Core.1.4.0\lib\45\NWebsec.Core.dll</HintPath>
+    <Reference Include="NWebsec.Core, Version=1.4.1.0, Culture=neutral, PublicKeyToken=3613da5f958908a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NWebsec.Core.1.4.1\lib\45\NWebsec.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="NWebsec.Mvc, Version=4.1.0.0, Culture=neutral, PublicKeyToken=3613da5f958908a1, processorArchitecture=MSIL">
-      <HintPath>..\packages\NWebsec.Mvc.4.1.0\lib\45\NWebsec.Mvc.dll</HintPath>
+    <Reference Include="NWebsec.Mvc, Version=4.1.1.0, Culture=neutral, PublicKeyToken=3613da5f958908a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\NWebsec.Mvc.4.1.1\lib\45\NWebsec.Mvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="NWebsec.SessionSecurity, Version=1.1.0.0, Culture=neutral, PublicKeyToken=3613da5f958908a1, processorArchitecture=MSIL">

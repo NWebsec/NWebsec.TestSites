@@ -1,4 +1,5 @@
-﻿using Microsoft.Owin;
+﻿using System.Security.Cryptography.X509Certificates;
+using Microsoft.Owin;
 using NWebsec.Owin;
 using Owin;
 
@@ -25,6 +26,7 @@ namespace Mvc5owin
             {
                 options.MaxAge(days: 30)
                     .IncludeSubdomains()
+                    .PinCertificate("8f 43 28 8a d2 72 f3 10 3b 6f b1 42 84 85 ea 30 14 c0 bc fe", storeName: StoreName.Root)
                     .Sha256Pins("d6qzRu9zOECb90Uez27xWltNsj0e1Md7GkYYkVoZWmM=",
                         "E9CZ9INDbd+2eRQozYqqbQ2yXLVKB9+xcprMF+44U1g=");
             }));
