@@ -80,6 +80,7 @@
     <Content Include="Hpkp\Default.aspx" />
     <Content Include="Hpkp\HttpsOnly\Default.aspx" />
     <Content Include="Hsts\Default.aspx" />
+    <Content Include="Hsts\UpgradeInsecureRequests\Default.aspx" />
     <Content Include="Hsts\HttpsOnly\Default.aspx" />
     <Content Include="SessionFixation.aspx" />
     <Content Include="Web.config">
@@ -121,6 +122,10 @@
     <Compile Include="Hsts\Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Hsts\UpgradeInsecureRequests\Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Hsts\HttpsOnly\Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -145,6 +150,7 @@
     <Content Include="Hsts\HttpsOnly\Web.config" />
     <Content Include="Hpkp\HttpsOnly\Web.config" />
     <Content Include="Hpkp\Web.config" />
+    <Content Include="Hsts\UpgradeInsecureRequests\Web.config" />
     <None Include="NWebsecConfig\HttpHeaderSecurityModuleConfig.xsd">
       <SubType>Designer</SubType>
     </None>

@@ -95,6 +95,31 @@ namespace NWebsec.Tests.Integration
         }
 
         [Test]
+        public async Task HstsUpgradeInsecureRequests_OldUa_NoHeader()
+        {
+            const string path = "/Hsts/UpgradeInsecureRequests/Default.aspx";
+            var testUri = Helper.GetHttpsUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            Assert.IsFalse(response.Headers.Any(c => c.Key.Equals("Strict-Transport-Security", StringComparison.OrdinalIgnoreCase)));
+        }
+
+        [Test]
+        public async Task HstsUpgradeInsecureRequests_ConformantUa_AddsHeader()
+        {
+            const string path = "/Hsts/UpgradeInsecureRequests/Default.aspx";
+            var testUri = Helper.GetHttpsUri(BaseUri, path);
+            HttpClient.DefaultRequestHeaders.Add("Upgrade-Insecure-Requests","1");
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            Assert.IsTrue(response.Headers.Any(c => c.Key.Equals("Strict-Transport-Security", StringComparison.OrdinalIgnoreCase)));
+        }
+
+        [Test]
         public async Task Hpkp_NotConfigured_NoHeader()
         {
             const string path = "/Default.aspx";

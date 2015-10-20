@@ -87,7 +87,7 @@ namespace NWebsec.Tests.Integration
             await response.Content.ReadAsStringAsync();
 
             Assert.AreEqual(HttpStatusCode.Redirect, response.StatusCode, ReqFailed + testUri);
-            Assert.AreEqual("https", response.Headers.Location.GetComponents(UriComponents.Scheme,UriFormat.UriEscaped));
+            Assert.AreEqual("https", response.Headers.Location.GetComponents(UriComponents.Scheme, UriFormat.UriEscaped));
         }
 
         [Test]
@@ -176,6 +176,31 @@ namespace NWebsec.Tests.Integration
 
             Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
             Assert.IsTrue(response.Headers.Contains("Strict-Transport-Security"), testUri.ToString());
+        }
+
+        [Test]
+        public async Task HstsUpgradeInsecureRequests_ConformantUa_SetsHeader()
+        {
+            const string path = "/Hsts/UpgradeInsecureRequests";
+            var testUri = Helper.GetHttpsUri(BaseUri, path);
+            HttpClient.DefaultRequestHeaders.Add("Upgrade-Insecure-Requests", "1");
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            Assert.IsTrue(response.Headers.Contains("Strict-Transport-Security"), testUri.ToString());
+        }
+
+        [Test]
+        public async Task HstsUpgradeInsecureRequests_OldUa_NoHeader()
+        {
+            const string path = "/Hsts/UpgradeInsecureRequests";
+            var testUri = Helper.GetHttpsUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            Assert.IsFalse(response.Headers.Contains("Strict-Transport-Security"), testUri.ToString());
         }
 
         //TODO

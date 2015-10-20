@@ -21,7 +21,8 @@ namespace Mvc5owin
 
             app.Map("/Hsts/Index", b => b.UseHsts(options => options.MaxAge(days: 30).IncludeSubdomains()));
             app.Map("/Hsts/NoHttpsOnly", b => b.UseHsts(options => options.MaxAge(days: 30).IncludeSubdomains().AllResponses()));
-
+            app.Map("/Hsts/UpgradeInsecureRequests", b => b.UseHsts(options => options.MaxAge(days: 30).UpgradeInsecureRequests()));
+            
             app.Map("/Hpkp/Index", b => b.UseHpkp(options =>
             {
                 options.MaxAge(days: 30)

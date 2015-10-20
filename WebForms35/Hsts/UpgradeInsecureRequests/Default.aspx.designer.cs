@@ -7,11 +7,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace WebForms35.Hsts {
-    
-    
-    public partial class Default {
-        
+namespace WebForms35.Hsts.HttpsOnly
+{
+
+
+    public partial class Default
+    {
+
         /// <summary>
         /// form1 control.
         /// </summary>

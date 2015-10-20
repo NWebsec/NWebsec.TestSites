@@ -18,5 +18,10 @@ namespace Mvc5owin.Controllers
         {
             return View("Index");
         }
+
+        public ActionResult UpgradeInsecureRequests()
+        {
+            return View("Index");
+        }
     }
 }
