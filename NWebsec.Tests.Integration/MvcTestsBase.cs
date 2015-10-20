@@ -244,7 +244,7 @@ namespace NWebsec.Tests.Integration
         {
             const string path = "/Csp";
             var testUri = Helper.GetUri(BaseUri, path);
-            HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.13+ (KHTML, like Gecko) Version/5.1.7 Safari/534.57.2");
+            Assert.IsTrue(HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.13+ (KHTML, like Gecko) Version/5.1.7 Safari/534.57.2"));
 
             var response = await HttpClient.GetAsync(testUri);
 
@@ -263,6 +263,34 @@ namespace NWebsec.Tests.Integration
 
             Assert.IsTrue(response.StatusCode == HttpStatusCode.Redirect, ReqFailed + testUri);
             Assert.IsFalse(response.Headers.Contains("Content-Security-Policy"), testUri.ToString());
+        }
+
+        [Test]
+        public async Task Csp_UpgradeInsecureRequestsOldUa_NoRedirect()
+        {
+            const string path = "/CspUpgradeInsecureRequests";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, testUri.ToString());
+            var headerValue = response.Headers.Single(h => h.Key.Equals("Content-Security-Policy")).Value.Single();
+            Assert.AreEqual("upgrade-insecure-requests", headerValue, testUri.ToString());
+        }
+
+        [Test]
+        public async Task Csp_UpgradeInsecureRequestsConformantUa_RedirectsToHttps()
+        {
+            const string path = "/CspUpgradeInsecureRequests";
+            var testUri = Helper.GetUri(BaseUri, path);
+            var expectedLocationUri = new UriBuilder(testUri) { Scheme = "https", Port = 443 }.Uri.AbsoluteUri;
+            HttpClient.DefaultRequestHeaders.Add("Upgrade-Insecure-Requests", "1");
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.AreEqual(HttpStatusCode.RedirectKeepVerb, response.StatusCode, testUri.ToString());
+            Assert.AreEqual("Upgrade-Insecure-Requests", response.Headers.Vary.Single(), testUri.ToString());
+            Assert.AreEqual(expectedLocationUri, response.Headers.Location.AbsoluteUri, testUri.ToString());
         }
 
         [Test]
@@ -590,7 +618,7 @@ namespace NWebsec.Tests.Integration
             var pluginType = pluginTypeCaptures[1].Value;
 
             Assert.AreEqual("application/htmlhelper", pluginType);
-            
+
             var expectedDirective = String.Format("plugin-types application/cspattribute {0}", pluginType);
             var cspHeader = response.Headers.GetValues("Content-Security-Policy").Single();
             Assert.AreEqual("plugin-types application/cspattribute application/htmlhelper", cspHeader, testUri.ToString());

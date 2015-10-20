@@ -119,6 +119,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\CspUpgradeInsecureRequestsController.cs" />
     <Compile Include="Controllers\CspFullConfigController.cs" />
     <Compile Include="Controllers\CspConfigController.cs" />
     <Compile Include="Controllers\CspController.cs" />

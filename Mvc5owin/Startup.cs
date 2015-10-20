@@ -39,19 +39,7 @@ namespace Mvc5owin
                         "E9CZ9INDbd+2eRQozYqqbQ2yXLVKB9+xcprMF+44U1g=");
             }));
 
-            app.UseRedirectValidation(options => options.AllowedDestinations("https://www.nwebsec.com", "https://nwebsec.codeplex.com/path"));
-            app.UseXContentTypeOptions();
-            app.UseXDownloadOptions();
-            app.UseXfo(options => options.SameOrigin());
-
-            app.UseXRobotsTag(options => options.NoIndex().NoFollow());
-            app.UseXXssProtection(options => options.EnabledWithBlockMode());
-
-            app.UseCsp(options => options
-                .DefaultSources(s => s.Self())
-                .ScriptSources(s => s.CustomSources("configscripthost"))
-                .MediaSources(s => s.CustomSources("fromconfig"))
-                );
+            app.Map("/CspUpgradeInsecureRequests", b => b.UseCsp(options => options.UpgradeInsecureRequests()));
 
             app.Map("/CspFullConfig",
                 b => b.UseCsp(options => options
@@ -73,6 +61,22 @@ namespace Mvc5owin
                     .ReportUris(s => s.Uris("/reporturi", "https://w-w.üüüüüü.de/réport?p=a;b,"))
                     )
                 );
+
+            app.UseXContentTypeOptions();
+            app.UseXDownloadOptions();
+            app.UseXfo(options => options.SameOrigin());
+
+            app.UseXRobotsTag(options => options.NoIndex().NoFollow());
+            app.UseXXssProtection(options => options.EnabledWithBlockMode());
+
+            app.UseCsp(options => options
+                .DefaultSources(s => s.Self())
+                .ScriptSources(s => s.CustomSources("configscripthost"))
+                .MediaSources(s => s.CustomSources("fromconfig"))
+                );
+            
+            app.UseRedirectValidation(options => options.AllowedDestinations("https://www.nwebsec.com", "https://nwebsec.codeplex.com/path"));
+
         }
     }
 }

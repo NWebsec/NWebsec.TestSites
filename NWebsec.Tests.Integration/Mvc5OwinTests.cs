@@ -423,5 +423,32 @@ namespace NWebsec.Tests.Integration
             const string expectedHeader = "default-src defaultsrcconfig;script-src scriptsrcconfig;object-src objectsrcconfig;style-src stylesrcconfig;img-src imgsrcconfig;media-src mediasrcconfig;frame-src framesrcconfig;font-src fontsrcconfig;connect-src connectsrcconfig;base-uri https://w-w.xn--tdaaaaaa.de/baseuri?p=a%3Bb%2C;child-src childsrcconfig;form-action formactionconfig;frame-ancestors frameancestorsconfig;plugin-types application/pdf;sandbox allow-forms allow-pointer-lock allow-popups allow-same-origin allow-scripts allow-top-navigation;report-uri /reporturi https://w-w.xn--tdaaaaaa.de/r%C3%A9port?p=a%3Bb%2C";
             Assert.AreEqual(expectedHeader, cspHeader, testUri.ToString());
         }
+        [Test]
+        public async Task Csp_UpgradeInsecureRequestsOldUa_NoRedirect()
+        {
+            const string path = "/CspUpgradeInsecureRequests";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.AreEqual(HttpStatusCode.OK, response.StatusCode, testUri.ToString());
+            var headerValue = response.Headers.Single(h => h.Key.Equals("Content-Security-Policy")).Value.Single();
+            Assert.AreEqual("upgrade-insecure-requests", headerValue, testUri.ToString());
+        }
+
+        [Test]
+        public async Task Csp_UpgradeInsecureRequestsConformantUa_RedirectsToHttps()
+        {
+            const string path = "/CspUpgradeInsecureRequests";
+            var testUri = Helper.GetUri(BaseUri, path);
+            var expectedLocationUri = new UriBuilder(testUri) { Scheme = "https", Port = 443 }.Uri.AbsoluteUri;
+            HttpClient.DefaultRequestHeaders.Add("Upgrade-Insecure-Requests", "1");
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.AreEqual(HttpStatusCode.RedirectKeepVerb, response.StatusCode, testUri.ToString());
+            Assert.AreEqual("Upgrade-Insecure-Requests", response.Headers.Vary.Single(), testUri.ToString());
+            Assert.AreEqual(expectedLocationUri, response.Headers.Location.AbsoluteUri, testUri.ToString());
+        }
     }
 }
