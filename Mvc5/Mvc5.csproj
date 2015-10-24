@@ -140,6 +140,7 @@
     <Compile Include="Controllers\CspFullConfigController.cs" />
     <Compile Include="Controllers\CspReportOnlyController.cs" />
     <Compile Include="Controllers\CspUpgradeInsecureRequestsController.cs" />
+    <Compile Include="Controllers\HpkpController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\NoCacheHeadersController.cs" />
     <Compile Include="Controllers\RedirectController.cs" />

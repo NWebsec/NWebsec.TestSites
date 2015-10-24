@@ -8,9 +8,6 @@ namespace NWebsec.Tests.Integration
     [TestFixture]
     public class Mvc3Tests : MvcTestsBase
     {
-        protected override string BaseUri
-        {
-            get { return ConfigurationManager.AppSettings["Mvc3BaseUri"]; }
-        }
+        protected override string BaseUri => ConfigurationManager.AppSettings["Mvc3BaseUri"];
     }
 }

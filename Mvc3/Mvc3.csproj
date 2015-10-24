@@ -126,6 +126,7 @@
     <Compile Include="Controllers\CspDirectivesController.cs" />
     <Compile Include="Controllers\CspReportOnlyController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\HpkpController.cs" />
     <Compile Include="Controllers\NoCacheHeadersController.cs" />
     <Compile Include="Controllers\RedirectController.cs" />
     <Compile Include="Controllers\SessionFixationController.cs" />

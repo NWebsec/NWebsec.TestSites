@@ -13,7 +13,7 @@ namespace NWebsec.Tests.Integration
 {
     public abstract class MvcTestsBase
     {
-        protected const String ReqFailed = "Request failed: ";
+        protected const string ReqFailed = "Request failed: ";
         protected HttpClient HttpClient;
         protected TestHelper Helper;
         private HttpClientHandler _handler;
@@ -237,19 +237,6 @@ namespace NWebsec.Tests.Integration
             Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
             var value = response.Headers.Single(h => h.Key.Equals("Content-Security-Policy")).Value.Single();
             Assert.AreEqual("default-src 'self'", value, testUri.ToString());
-        }
-
-        [Test]
-        public async Task Csp_EnabledAndSafari5_NoHeaders()
-        {
-            const string path = "/Csp";
-            var testUri = Helper.GetUri(BaseUri, path);
-            Assert.IsTrue(HttpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_6_8) AppleWebKit/537.13+ (KHTML, like Gecko) Version/5.1.7 Safari/534.57.2"));
-
-            var response = await HttpClient.GetAsync(testUri);
-
-            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
-            Assert.IsFalse(response.Headers.Contains("Content-Security-Policy"), testUri.ToString());
         }
 
         //TODO Have a look at this for the next version
@@ -619,7 +606,6 @@ namespace NWebsec.Tests.Integration
 
             Assert.AreEqual("application/htmlhelper", pluginType);
 
-            var expectedDirective = String.Format("plugin-types application/cspattribute {0}", pluginType);
             var cspHeader = response.Headers.GetValues("Content-Security-Policy").Single();
             Assert.AreEqual("plugin-types application/cspattribute application/htmlhelper", cspHeader, testUri.ToString());
         }
@@ -900,6 +886,20 @@ namespace NWebsec.Tests.Integration
             var header = response.Headers.SingleOrDefault(h => h.Key.Equals("X-Robots-Tag"));
             Assert.IsNotNull(header, "X-Robots-Tag header not set in response.");
             Assert.AreEqual("noindex, nofollow", header.Value.Single());
+        }
+
+        [Test]
+        public async Task Hpkp_SetsHeader()
+        {
+            const string path = "/Hpkp";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            var header = response.Headers.SingleOrDefault(h => h.Key.Equals("Public-Key-Pins"));
+            Assert.IsNotNull(header, "Public-Key-Pins header not set in response.");
+            Assert.AreEqual(@"max-age=5;pin-sha256=""n3dNcH43TClpDuyYl55EwbTTAuj4T7IloK4GNaH1bnE="";pin-sha256=""d6qzRu9zOECb90Uez27xWltNsj0e1Md7GkYYkVoZWmM=""", header.Value.Single());
         }
 
         [Test]
