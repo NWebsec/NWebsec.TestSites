@@ -13,15 +13,12 @@ namespace NWebsec.Tests.Integration
     [TestFixture]
     public class Mvc5OwinTests
     {
-        protected const String ReqFailed = "Request failed: ";
+        protected const string ReqFailed = "Request failed: ";
         protected HttpClient HttpClient;
         protected TestHelper Helper;
         private HttpClientHandler _handler;
 
-        protected string BaseUri
-        {
-            get { return ConfigurationManager.AppSettings["Mvc5OwinBaseUri"]; }
-        }
+        protected string BaseUri => ConfigurationManager.AppSettings["Mvc5OwinBaseUri"];
 
         [SetUp]
         public void Setup()
@@ -474,6 +471,71 @@ namespace NWebsec.Tests.Integration
             Assert.AreEqual(HttpStatusCode.RedirectKeepVerb, response.StatusCode, testUri.ToString());
             Assert.AreEqual("Upgrade-Insecure-Requests", response.Headers.Vary.Single(), testUri.ToString());
             Assert.AreEqual(expectedLocationUri, response.Headers.Location.AbsoluteUri, testUri.ToString());
+        }
+
+        [Test]
+        public async Task ReferrerPolicy_None_SetsMetatag()
+        {
+            const string path = "/ReferrerPolicy/None";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            var body = await response.Content.ReadAsStringAsync();
+
+            Assert.IsTrue(body.Contains(@"<meta name=""referrer"" content=""none"" />"));
+        }
+
+        [Test]
+        public async Task ReferrerPolicy_NoneWhenDowngrade_SetsMetatag()
+        {
+            const string path = "/ReferrerPolicy/NoneWhenDowngrade";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            var body = await response.Content.ReadAsStringAsync();
+
+            Assert.IsTrue(body.Contains(@"<meta name=""referrer"" content=""none-when-downgrade"" />"));
+        }
+
+        [Test]
+        public async Task ReferrerPolicy_Origin_SetsMetatag()
+        {
+            const string path = "/ReferrerPolicy/Origin";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            var body = await response.Content.ReadAsStringAsync();
+
+            Assert.IsTrue(body.Contains(@"<meta name=""referrer"" content=""origin"" />"));
+        }
+
+        [Test]
+        public async Task ReferrerPolicy_OriginWhenCrossOrigin_SetsMetatag()
+        {
+            const string path = "/ReferrerPolicy/OriginWhenCrossOrigin";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            var body = await response.Content.ReadAsStringAsync();
+
+            Assert.IsTrue(body.Contains(@"<meta name=""referrer"" content=""origin-when-crossorigin"" />"));
+        }
+
+        [Test]
+        public async Task ReferrerPolicy_UnsafeUrl_SetsMetatag()
+        {
+            const string path = "/ReferrerPolicy/UnsafeUrl";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            var body = await response.Content.ReadAsStringAsync();
+
+            Assert.IsTrue(body.Contains(@"<meta name=""referrer"" content=""unsafe-url"" />"));
         }
     }
 }

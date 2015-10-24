@@ -1,0 +1,20 @@
+﻿@using NWebsec.Mvc.Extensions
+@model dynamic
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>title</title>
+    @Html.ReferrerPolicyMetaTag(policy => policy.OriginWhenCrossOrigin)
+</head>
+<body>
+<div>
+      
+</div>
+</body>
+</html>
