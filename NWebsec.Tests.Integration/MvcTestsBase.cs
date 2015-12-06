@@ -69,9 +69,12 @@ namespace NWebsec.Tests.Integration
             Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
             var cacheControlHeader = response.Headers.CacheControl;
             var pragmaHeader = response.Headers.Pragma;
-            Assert.IsFalse(cacheControlHeader.NoCache, testUri.ToString());
-            Assert.IsFalse(cacheControlHeader.NoStore, testUri.ToString());
-            Assert.IsFalse(cacheControlHeader.MustRevalidate, testUri.ToString());
+            if (cacheControlHeader != null)
+            {
+                Assert.IsFalse(cacheControlHeader.NoCache, testUri.ToString());
+                Assert.IsFalse(cacheControlHeader.NoStore, testUri.ToString());
+                Assert.IsFalse(cacheControlHeader.MustRevalidate, testUri.ToString());
+            }
             Assert.IsEmpty(pragmaHeader, testUri.ToString());
             Assert.IsFalse(response.Content.Headers.TryGetValues("Expires", out values), testUri.ToString());
         }

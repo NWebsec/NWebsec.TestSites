@@ -9,8 +9,12 @@ namespace NWebsec.Tests.Integration
         internal Uri GetUri(string baseUri, string path, string query="")
         {
             var absoluteUri = new UriBuilder(baseUri);
-            absoluteUri.Path += path;
+
+            if (absoluteUri.Path.Equals("/")) absoluteUri.Path = path;
+            else absoluteUri.Path += path;
+
             absoluteUri.Query = query;
+
             return absoluteUri.Uri;
         }
 
@@ -18,8 +22,11 @@ namespace NWebsec.Tests.Integration
         {
             var absoluteUri = new UriBuilder(baseUri);
             absoluteUri.Scheme = "https";
-            absoluteUri.Port = 4443;
-            absoluteUri.Path += path;
+            absoluteUri.Port = 4444;
+
+            if (absoluteUri.Path.Equals("/")) absoluteUri.Path = path;
+            else absoluteUri.Path += path;
+
             absoluteUri.Query = query;
             return absoluteUri.Uri;
         }
