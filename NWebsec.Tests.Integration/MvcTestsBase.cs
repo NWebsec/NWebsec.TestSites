@@ -578,6 +578,19 @@ namespace NWebsec.Tests.Integration
         }
 
         [Test]
+        public async Task CspDirectives_ManifestSrcEnabled_SetsHeader()
+        {
+            const string path = "/CspDirectives/ManifestSrc";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            var cspHeader = response.Headers.GetValues("Content-Security-Policy").Single();
+            Assert.AreEqual("manifest-src 'self'", cspHeader, path);
+        }
+
+        [Test]
         public async Task CspDirectives_PluginTypes_SetsHeader()
         {
             const string path = "/CspDirectives/PluginTypes";
@@ -647,6 +660,19 @@ namespace NWebsec.Tests.Integration
             Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
             var cspHeader = response.Headers.GetValues("Content-Security-Policy").Single();
             Assert.AreEqual("sandbox allow-scripts", cspHeader, testUri.ToString());
+        }
+
+        [Test]
+        public async Task CspDirectives_MixedContent_SetsHeader()
+        {
+            const string path = "/CspDirectives/MixedContent";
+            var testUri = Helper.GetUri(BaseUri, path);
+
+            var response = await HttpClient.GetAsync(testUri);
+
+            Assert.IsTrue(response.IsSuccessStatusCode, ReqFailed + testUri);
+            var cspHeader = response.Headers.GetValues("Content-Security-Policy").Single();
+            Assert.AreEqual("block-all-mixed-content", cspHeader, path);
         }
 
         [Test]

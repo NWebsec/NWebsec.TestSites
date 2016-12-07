@@ -45,6 +45,7 @@ namespace Mvc5owin
             app.Map("/CspFullConfig",
                 b => b.UseCsp(options => options
                     .BaseUris(s => s.CustomSources("https://w-w.üüüüüü.de/baseuri?p=a;b,"))
+                    .BlockAllMixedContent()
                     .ChildSources(s => s.CustomSources("childsrcconfig"))
                     .ConnectSources(s => s.CustomSources("connectsrcconfig"))
                     .DefaultSources(s => s.CustomSources("defaultsrcconfig"))
@@ -53,6 +54,7 @@ namespace Mvc5owin
                     .FrameAncestors(s => s.CustomSources("frameancestorsconfig"))
                     .FrameSources(s => s.CustomSources("framesrcconfig"))
                     .ImageSources(s => s.CustomSources("imgsrcconfig"))
+                    .ManifestSources(s => s.CustomSources("manifestsrcconfig"))
                     .MediaSources(s => s.CustomSources("mediasrcconfig"))
                     .ObjectSources(s => s.CustomSources("objectsrcconfig"))
                     .PluginTypes(s => s.MediaTypes("application/pdf"))

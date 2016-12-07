@@ -88,8 +88,15 @@ namespace Mvc3.Controllers
         {
             return View("Index");
         }
+
         [CspFormAction(Self = true)]
         public ActionResult FormAction()
+        {
+            return View("Index");
+        }
+
+        [CspManifestSrc(Self = true)]
+        public ActionResult ManifestSrc()
         {
             return View("Index");
         }
@@ -119,6 +126,12 @@ namespace Mvc3.Controllers
 
         [CspSandbox(AllowScripts = true)]
         public ActionResult SandboxAllowScripts()
+        {
+            return View("Index");
+        }
+
+        [CspBlockAllMixedContent]
+        public ActionResult MixedContent()
         {
             return View("Index");
         }
